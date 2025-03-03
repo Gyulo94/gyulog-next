@@ -163,6 +163,11 @@
   -webkit-box-reflect: below 1px linear-gradient(transparent, #0003);
   outline: none;
 }
+
+.wmde-markdown {
+  background-color: transparent !important;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
