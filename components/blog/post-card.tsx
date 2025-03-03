@@ -1,3 +1,4 @@
+import { Tags } from "@/lib/schema";
 import Image from "next/image";
 import Link from "next/link";
 import { Badge } from "../ui/badge";
@@ -11,21 +12,20 @@ export default function PostCard({
   tags,
   createdAt,
 }: {
-  id: string;
+  id: number;
   title: string;
   thumnail: string;
   category: string;
-  tags: string[];
+  tags: Tags[];
   createdAt: string;
 }) {
   return (
     <Card className="p-2 hover:scale-105 transition-all duration-500">
-      <Link href={`/blog/${category}/${id}`}>
+      <Link href={`/blog/${id}`}>
         <CardHeader className="pt-0 pb-4 px-0">
-          <div className="relative aspect-[1.8/1] w-full">
+          <div className="relative aspect-[1.8/1] border rounded-md overflow-hidden w-full">
             <Image
-              objectFit="cover"
-              className="rounded-md"
+              className="object-cover"
               src={thumnail}
               fill
               sizes="360px"
@@ -35,8 +35,8 @@ export default function PostCard({
           </div>
           <div className="flex justify-start items-center py-2 gap-x-2">
             {tags.map((tag) => (
-              <Badge key={tag} variant={"secondary"}>
-                {tag}
+              <Badge key={tag.name} variant={"secondary"}>
+                {tag.name}
               </Badge>
             ))}
           </div>
