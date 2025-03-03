@@ -47,11 +47,22 @@ export async function findByCategory(
   }
 
   const response = await fetch(
-    `${SERVER_URL}/blog/${category}?${params.toString()}`,
+    `${SERVER_URL}/category/${category}?${params.toString()}`,
     {
       method: "GET",
     }
   );
+  if (!response.ok) {
+    throw new Error("Failed to fetch blog");
+  }
+  const result = await response.json();
+  return result;
+}
+
+export async function findById(id: number) {
+  const response = await fetch(`${SERVER_URL}/blog/${id}`, {
+    method: "GET",
+  });
   if (!response.ok) {
     throw new Error("Failed to fetch blog");
   }
