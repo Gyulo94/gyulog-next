@@ -17,7 +17,7 @@ export default function Banner({ data }: { data?: string }) {
   return (
     <div className="px-5 w-full h-32 md:h-60 flex justify-center items-center">
       <h2
-        className={`w-full text-5xl leading-[0.8em] md:text-8xl md:leading-[0.81em] transition-all duration-1000 uppercase ${
+        className={`w-full text-5xl leading-[0.68em] md:text-8xl md:leading-[0.68em] transition-all duration-1000 uppercase ${
           theme === "dark" ? "h2-neon" : "h2-neon-light"
         }`}
       >
