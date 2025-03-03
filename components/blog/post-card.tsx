@@ -21,7 +21,7 @@ export default function PostCard({
 }) {
   return (
     <Card className="p-2 hover:scale-105 transition-all duration-500">
-      <Link href={`/blog/${id}`}>
+      <Link href={`/${id}`}>
         <CardHeader className="pt-0 pb-4 px-0">
           <div className="relative aspect-[1.8/1] border rounded-md overflow-hidden w-full">
             <Image
@@ -45,7 +45,7 @@ export default function PostCard({
           </CardTitle>
         </CardHeader>
         <CardFooter className="flex items-center justify-between pb-0 px-0">
-          <Badge variant={"secondary"}>{category}</Badge>
+          <Badge variant={"default"}>{category}</Badge>
           <p className="text-[#878787]">{createdAt}</p>
         </CardFooter>
       </Link>
