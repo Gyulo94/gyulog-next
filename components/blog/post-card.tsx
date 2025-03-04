@@ -1,4 +1,5 @@
 import { Tags } from "@/lib/schema";
+import { format } from "date-fns";
 import Image from "next/image";
 import Link from "next/link";
 import { Badge } from "../ui/badge";
@@ -46,7 +47,9 @@ export default function PostCard({
         </CardHeader>
         <CardFooter className="flex items-center justify-between pb-0 px-0">
           <Badge variant={"default"}>{category}</Badge>
-          <p className="text-[#878787]">{createdAt}</p>
+          <p className="text-[#878787]">
+            {format(new Date(createdAt), "yyyy년 M월 d일")}
+          </p>
         </CardFooter>
       </Link>
     </Card>
