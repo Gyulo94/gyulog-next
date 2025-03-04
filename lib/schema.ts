@@ -1,5 +1,22 @@
 import { z } from "zod";
 
+export type FormState =
+  | {
+      error?: {
+        name?: string[];
+        email?: string[];
+        password?: string[];
+      };
+      message?: string;
+      data?: z.infer<typeof LoginFormSchema>;
+    }
+  | undefined;
+
+export const LoginFormSchema = z.object({
+  email: z.string().email(),
+  password: z.string(),
+});
+
 export const tagSchema = z.object({
   id: z.number(),
   name: z.string(),
