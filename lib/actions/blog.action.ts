@@ -1,6 +1,8 @@
 "use server";
 
 import { SERVER_URL } from "../constants";
+import { Blog } from "../schema";
+import { convertToAbsoluteUrl } from "../utils";
 
 export async function findAll(page: number, take: number, title?: string) {
   const params = new URLSearchParams();
@@ -24,6 +26,11 @@ export async function findAll(page: number, take: number, title?: string) {
     throw new Error("Failed to fetch blog");
   }
   const result = await response.json();
+
+  result.blogs = result.blogs.map((blog: Blog) => {
+    blog.thumnail = convertToAbsoluteUrl(blog.thumnail);
+    return blog;
+  });
   return result;
 }
 
@@ -56,6 +63,11 @@ export async function findByCategory(
     throw new Error("Failed to fetch blog");
   }
   const result = await response.json();
+  // 이미지 URL을 절대 URL로 변환
+  result.blogs = result.blogs.map((blog: Blog) => {
+    blog.thumnail = convertToAbsoluteUrl(blog.thumnail);
+    return blog;
+  });
   return result;
 }
 
@@ -67,5 +79,6 @@ export async function findById(id: number) {
     throw new Error("Failed to fetch blog");
   }
   const result = await response.json();
+  result.thumnail = convertToAbsoluteUrl(result.thumnail);
   return result;
 }

@@ -20,6 +20,7 @@ const nextConfig: NextConfig = {
         hostname: "b1490832.smushcdn.com",
       },
     ],
+    domains: ["localhost"],
   },
 };
 
