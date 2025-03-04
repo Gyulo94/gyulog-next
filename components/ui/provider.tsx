@@ -2,6 +2,7 @@
 
 import { SessionProvider } from "next-auth/react";
 import { ReactNode } from "react";
+import Header from "../shared/Header";
 import { ThemeProvider } from "./theme-provider";
 
 interface Props {
@@ -17,6 +18,7 @@ export default function Providers({ children }: Props) {
         enableSystem
         disableTransitionOnChange
       >
+        <Header />
         {children}
       </ThemeProvider>
     </SessionProvider>

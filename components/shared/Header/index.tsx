@@ -2,11 +2,18 @@
 import logo from "@/public/images/logo.png";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import ChatbotButton from "./chatbot-button";
 import { ModeToggle } from "./mode-toggle";
 import { NavMenu } from "./nav-menu";
 
 export default function Header() {
+  const pathname = usePathname();
+  const hideHeaderPaths = ["/admin", "/admin/login", "/admin/logout"];
+
+  if (hideHeaderPaths.includes(pathname)) {
+    return null;
+  }
   return (
     <header className="w-full border-b z-9">
       <div className="container mx-auto py-4 px-8 h-20 w-full flex justify-between items-center">

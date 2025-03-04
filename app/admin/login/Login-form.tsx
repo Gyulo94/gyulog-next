@@ -35,7 +35,7 @@ const LoginForm = () => {
         message: "이메일 혹은 비밀번호가 일치하지 않습니다.",
       });
     } else {
-      window.location.href = "/";
+      window.location.href = "/admin";
     }
   };
 

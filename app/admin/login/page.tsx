@@ -21,9 +21,7 @@ export const metadata: Metadata = {
 
 const SignIn = async () => {
   const session = await getServerSession(authOptions);
-  if (session && session.user) redirect("/");
-  // const session = await getSession();
-  // if (session && session.user) redirect("/");
+  if (session && session.user) redirect("/admin");
   return (
     <div className="w-full max-w-md mx-auto">
       <Card>
