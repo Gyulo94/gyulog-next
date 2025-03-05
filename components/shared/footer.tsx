@@ -27,7 +27,7 @@ export default function Footer() {
               </p>
               <div className="flex items-center mt-4 space-x-2">
                 <Link
-                  href={"mailto:chalgyu1029@gmail.com"}
+                  href={"mailto:gyulog2025@gmail.com"}
                   className="rounded-md hover:bg-[#1e293b] hover:text-[#f8fafc] w-9 h-9 flex items-center justify-center"
                 >
                   <Icons.mail className="w-6 h-6" />
