@@ -6,7 +6,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { APP_NAME } from "@/lib/constants";
 import { getServerSession } from "next-auth";
 import Image from "next/image";
 import Link from "next/link";
@@ -19,16 +18,15 @@ export default async function AdminPage() {
   return (
     <div className="w-full max-w-md mx-auto">
       <Card>
-        <CardHeader className="space-y-4">
-          <Link href="/" className="flex justify-center mb-2">
+        <CardHeader className="space-y-4 flex justify-center items-center">
+          <div className="flex justify-center items-center h-28 w-28 relative mb-2">
             <Image
-              src="/images/logo.png"
-              width={100}
-              height={100}
-              alt={`${APP_NAME} logo`}
-              priority={true}
+              src={session.user.profileImage || ""}
+              fill
+              alt={`user`}
+              className="rounded-full object-cover"
             />
-          </Link>
+          </div>
           <CardTitle className="text-center text-2xl">
             관계자 외 출입금지
           </CardTitle>

@@ -19,6 +19,10 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "b1490832.smushcdn.com",
       },
+      {
+        protocol: "https",
+        hostname: "img1.daumcdn.net",
+      },
     ],
     domains: ["localhost"],
   },
