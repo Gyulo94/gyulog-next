@@ -17,7 +17,7 @@ export default async function Page({ params }: { params: { id: number } }) {
   return (
     <>
       <Processbar />
-      <div className="mx-auto container flex flex-col px-4 pb-40 pt-20">
+      <div className="mx-auto container h-auto min-h-full flex flex-col px-4 pt-20">
         <h1 className="mb-8 text-4xl font-bold">{title}</h1>
         <div className="flex flex-row items-center justify-between">
           <div className="flex gap-2">

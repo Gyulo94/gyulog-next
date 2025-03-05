@@ -15,7 +15,7 @@ export default async function TagList() {
   return (
     <div className="flex justify-center items-center flex-wrap gap-4">
       {tags.map((tag: Tag) => (
-        <Link href={`/tag/${tag.name}`}>
+        <Link href={`/tag/${tag.name}`} key={tag.name}>
           <Badge key={tag.name} variant={"secondary"}>
             {tag.name + " (" + tag._count.blogs + ")"}
           </Badge>
