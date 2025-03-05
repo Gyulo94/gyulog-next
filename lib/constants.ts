@@ -45,3 +45,45 @@ export const category: { title: string; href: string; description: string }[] =
       description: "개인의 생각이나 감정을 제약 없이 표현하는 글.",
     },
   ];
+
+export const customStyles = {
+  control: (provided: any, state: any) => ({
+    ...provided,
+    backgroundColor: "#030712",
+    border:
+      state.isFocused && state.isSelected
+        ? "1px solid #5D3CEF"
+        : "1px solid #4b5563",
+    "&:hover": {
+      border: "1px solid #5D3CEF",
+    },
+  }),
+  menu: (provided: any) => ({
+    ...provided,
+    backgroundColor: "#030712",
+    border: "1px solid #4b5563",
+  }),
+  option: (provided: any, state: any) => ({
+    ...provided,
+    backgroundColor: state.isSelected
+      ? "#030712"
+      : state.isFocused
+      ? "#030712"
+      : "#030712",
+    color: state.isSelected ? "#fff" : "#d1d5db",
+    "&:hover": {
+      backgroundColor: "#5D3CEF",
+      cursor: "pointer",
+      color: "#fff",
+    },
+  }),
+  singleValue: (provided: any) => ({
+    ...provided,
+    color: "#fff",
+  }),
+  multiValue: (provided: any) => ({
+    ...provided,
+    color: "#fff",
+    backgroundColor: "#5D3CEF",
+  }),
+};

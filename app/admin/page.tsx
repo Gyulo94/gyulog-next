@@ -41,7 +41,7 @@ export default async function AdminPage() {
           <p>오늘도 좋은 하루 되세요 !</p>
           <div className="flex flex-col space-y-4">
             <Button asChild>
-              <Link href={`/admin/posts`}>글 작성</Link>
+              <Link href={`/admin/write`}>글 작성</Link>
             </Button>
             <Button>
               <Link href={`/admin/logout`}>로그아웃</Link>

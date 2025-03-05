@@ -1,5 +1,8 @@
 "use server";
 
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { getServerSession } from "next-auth";
+import { revalidatePath } from "next/cache";
 import { SERVER_URL } from "../constants";
 import { Blog } from "../schema";
 import { convertToAbsoluteUrl } from "../utils";
@@ -80,5 +83,30 @@ export async function findById(id: number) {
   }
   const result = await response.json();
   result.thumnail = convertToAbsoluteUrl(result.thumnail);
+  return result;
+}
+
+export async function createPost(formData: FormData) {
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    throw new Error("No session found");
+  }
+
+  const response = await fetch(`${SERVER_URL}/blog`, {
+    method: "POST",
+    body: formData,
+    headers: {
+      authorization: `Bearer ${session.backendTokens.access_token}`,
+    },
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    console.error("Failed to fetch Post:", errorText);
+    throw new Error("Failed to fetch Post");
+  }
+
+  revalidatePath("/");
+  const result = await response.json();
   return result;
 }

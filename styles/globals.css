@@ -168,6 +168,10 @@
   background-color: transparent !important;
 }
 
+.css-9jq23d {
+  color: #fff !important;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
