@@ -74,6 +74,43 @@ export async function findByCategory(
   return result;
 }
 
+export async function findByTag(
+  page: number,
+  take: number,
+  tag: string,
+  title?: string
+) {
+  const params = new URLSearchParams();
+
+  if (page) {
+    params.append("page", page.toString());
+  }
+
+  if (take) {
+    params.append("take", take.toString());
+  }
+  if (title) {
+    params.append("title", title);
+  }
+
+  const response = await fetch(
+    `${SERVER_URL}/tag/${tag}?${params.toString()}`,
+    {
+      method: "GET",
+    }
+  );
+  if (!response.ok) {
+    throw new Error("Failed to fetch Tag");
+  }
+  const result = await response.json();
+  // 이미지 URL을 절대 URL로 변환
+  result.blogs = result.blogs.map((blog: Blog) => {
+    blog.thumnail = convertToAbsoluteUrl(blog.thumnail);
+    return blog;
+  });
+  return result;
+}
+
 export async function findById(id: number) {
   const response = await fetch(`${SERVER_URL}/blog/${id}`, {
     method: "GET",
