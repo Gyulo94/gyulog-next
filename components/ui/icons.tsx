@@ -1,9 +1,15 @@
-import { Bot, Icon as LucidIcon, LucideProps } from "lucide-react";
+import {
+  ArrowUpFromLine,
+  Bot,
+  Icon as LucidIcon,
+  LucideProps,
+} from "lucide-react";
 
 export type Icon = typeof LucidIcon;
 
 export const Icons = {
   bot: Bot,
+  scrollToTop: ArrowUpFromLine,
   gitHub: ({ ...props }: LucideProps) => (
     <svg
       aria-hidden="true"

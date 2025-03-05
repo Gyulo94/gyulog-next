@@ -1,4 +1,5 @@
 import Processbar from "@/components/blog/processbar";
+import ScrollToTopButton from "@/components/blog/scroll-to-top-button";
 import { Badge } from "@/components/ui/badge";
 import { MarkdownViewer } from "@/components/ui/markdown";
 import { findById } from "@/lib/actions/blog.action";
@@ -47,6 +48,7 @@ export default async function Page({ params }: { params: { id: number } }) {
         )}
         <MarkdownViewer source={content} className="mt-8 w-full" />
       </div>
+      <ScrollToTopButton />
     </>
   );
 }
