@@ -1,8 +1,11 @@
 "use server";
 
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import fs from "fs";
 import { getServerSession } from "next-auth";
 import { revalidatePath } from "next/cache";
+import { unauthorized } from "next/navigation";
+import { join } from "path";
 import { SERVER_URL } from "../constants";
 import { Blog } from "../schema";
 import { convertToAbsoluteUrl } from "../utils";
@@ -128,7 +131,6 @@ export async function createPost(formData: FormData) {
   if (!session) {
     throw new Error("No session found");
   }
-
   const response = await fetch(`${SERVER_URL}/blog`, {
     method: "POST",
     body: formData,
@@ -146,4 +148,45 @@ export async function createPost(formData: FormData) {
   revalidatePath("/");
   const result = await response.json();
   return result;
+}
+
+function sanitizeFileName(fileName: string): string {
+  return fileName.replace(/[^a-z0-9]/gi, "-").toLowerCase();
+}
+
+export async function createMDX(
+  title: string,
+  content: string,
+  mdxCategory: string,
+  mdxTags: string,
+  createdAt: string
+) {
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    throw new Error("No session found");
+  }
+  const mdxContent = `
+  ---
+  title: "${title}"
+  category: "${mdxCategory}"
+  tags: "${mdxTags}"
+  createdAt: "${createdAt}"
+  ---
+  
+  ${content}
+  `;
+  const sanitizedTitle = sanitizeFileName(title);
+  const filePath = join(
+    process.cwd(),
+    "app",
+    "contents",
+    `${sanitizedTitle}.mdx`
+  );
+
+  if (session.backendTokens.access_token) {
+    await fs.writeFileSync(filePath, mdxContent, "utf-8");
+    console.log(`MDX content: ${mdxContent}`);
+  } else {
+    throw unauthorized();
+  }
 }

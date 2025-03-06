@@ -3,10 +3,10 @@
 import { Input } from "@/components/ui/input";
 import { MarkdownEditor } from "@/components/ui/markdown";
 import SubmitButton from "@/components/ui/submitButton";
-import { createPost } from "@/lib/actions/blog.action";
-
+import { createMDX, createPost } from "@/lib/actions/blog.action";
 import { customStyles } from "@/lib/constants";
 import { Category, Tags } from "@/lib/schema";
+import { format } from "date-fns";
 import { Image as Photo } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
@@ -61,6 +61,22 @@ export default function WriteForm({ categoryList, tagsList }: WriteFormProps) {
     if (fileRef.current?.files?.[0]) {
       formData.append("thumnail", fileRef.current.files[0]);
     }
+
+    const mdxTags = tags.join(", ");
+    const mdxCategory = categoryList.find((c) => c.id === category)?.name;
+    console.log("mdxTags", mdxTags);
+    console.log("mdxCategory", mdxCategory);
+    const createdAt = format(new Date(), "yyyy-MM-dd");
+    if (!mdxCategory) {
+      return alert("카테고리를 선택해주세요.");
+    }
+    await createMDX(
+      titleRef.current?.value,
+      content,
+      mdxCategory,
+      mdxTags,
+      createdAt
+    );
 
     const data = await createPost(formData);
 

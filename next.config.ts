@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+const removeImports = require("next-remove-imports")();
 
 const nextConfig: NextConfig = {
   images: {
@@ -26,6 +27,11 @@ const nextConfig: NextConfig = {
     ],
     domains: ["localhost"],
   },
+  experimental: {
+    serverActions: {
+      bodySizeLimit: "50mb",
+    },
+  },
 };
 
-export default nextConfig;
+export default removeImports(nextConfig);

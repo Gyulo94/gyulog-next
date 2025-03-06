@@ -18,14 +18,14 @@ export const LoginFormSchema = z.object({
 });
 
 export const tagSchema = z.object({
-  id: z.number(),
+  id: z.string(),
   name: z.string(),
   createdAt: z.string().datetime(),
   updatedAt: z.string().datetime(),
 });
 
 export const categorySchema = z.object({
-  id: z.number(),
+  id: z.string(),
   name: z.string(),
   createdAt: z.string().datetime(),
   updatedAt: z.string().datetime(),
