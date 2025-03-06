@@ -22,8 +22,8 @@ export default function Footer() {
             <div>
               <h2 className="font-bold">박철규 / 풀스택 개발자</h2>
               <p className="text-sm text-gray-500 dark:text-gray-400">
-                경쟁력있고 소통하는 개발자로 거듭나기 위해, 도전하는 열정으로
-                끊임없이 성장하겠습니다.
+                경쟁력있고 소통하는 개발자로 거듭나기 위해, 끊임없이
+                성장하겠습니다.
               </p>
               <div className="flex items-center mt-4 space-x-2">
                 <Link
