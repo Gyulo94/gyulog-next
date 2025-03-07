@@ -40,6 +40,28 @@ export async function findAll(page: number, take: number, title?: string) {
   return result;
 }
 
+export async function findByBot(title?: string) {
+  const params = new URLSearchParams();
+
+  if (title) {
+    params.append("title", title);
+  }
+
+  const response = await fetch(`${SERVER_URL}/blog/bot?${params.toString()}`, {
+    method: "GET",
+  });
+  if (!response.ok) {
+    throw new Error("Failed to fetch blog");
+  }
+  const result = await response.json();
+
+  const blog = result.map((blog: Blog) => {
+    blog.thumnail = convertToAbsoluteUrl(blog.thumnail);
+    return blog;
+  });
+  return blog;
+}
+
 export async function findByCategory(
   page: number,
   take: number,
@@ -185,7 +207,7 @@ export async function createMDX(
 
   if (session.backendTokens.access_token) {
     await fs.writeFileSync(filePath, mdxContent, "utf-8");
-    console.log(`MDX content: ${mdxContent}`);
+    // console.log(`MDX content: ${mdxContent}`);
   } else {
     throw unauthorized();
   }

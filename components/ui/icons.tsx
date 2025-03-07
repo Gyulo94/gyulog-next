@@ -4,6 +4,7 @@ import {
   Icon as LucidIcon,
   LucideProps,
   Mail,
+  Send,
 } from "lucide-react";
 
 export type Icon = typeof LucidIcon;
@@ -12,6 +13,7 @@ export const Icons = {
   bot: Bot,
   scrollToTop: ArrowUpFromLine,
   mail: Mail,
+  send: Send,
   twitter: ({ ...props }: LucideProps) => (
     <svg
       aria-hidden="true"
