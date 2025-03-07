@@ -1,12 +1,17 @@
+"use client";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Icons } from "../ui/icons";
 
 export default function Footer() {
+  const pathname = usePathname();
+  const hideFooterPaths = ["/admin", "/admin/login", "/admin/logout"];
+
+  if (hideFooterPaths.includes(pathname)) {
+    return null;
+  }
   return (
-    // <div className="w-full h-[103px] border relative translate-y-full">
-    //   Footer
-    // </div>
     <footer className="bg-transparent border-t py-8 mt-10">
       <div className="container mx-auto px-4 md:px-6">
         <div className="grid grid-cols-1 gap-8 md:flex md:justify-center md:items-center">
