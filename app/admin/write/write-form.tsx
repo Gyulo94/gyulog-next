@@ -64,8 +64,6 @@ export default function WriteForm({ categoryList, tagsList }: WriteFormProps) {
 
     const mdxTags = tags.join(", ");
     const mdxCategory = categoryList.find((c) => c.id === category)?.name;
-    console.log("mdxTags", mdxTags);
-    console.log("mdxCategory", mdxCategory);
     const createdAt = format(new Date(), "yyyy-MM-dd");
     if (!mdxCategory) {
       return alert("카테고리를 선택해주세요.");
