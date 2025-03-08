@@ -1,9 +1,10 @@
 import Processbar from "@/components/blog/processbar";
 import ScrollToTopButton from "@/components/blog/scroll-to-top-button";
+import ViewCount from "@/components/blog/view-count";
 import { Badge } from "@/components/ui/badge";
 import { MarkdownViewer } from "@/components/ui/markdown";
 import { findById } from "@/lib/actions/blog.action";
-import { Tags } from "@/lib/schema";
+import { Blog, Tags } from "@/lib/schema";
 import { format } from "date-fns";
 import Image from "next/image";
 import Link from "next/link";
@@ -11,8 +12,9 @@ import Link from "next/link";
 export default async function Page({ params }: { params: { id: number } }) {
   const { id } = await params;
 
-  const getData = await findById(id);
-  const { title, category, tags, createdAt, thumnail, content } = getData;
+  const getData: Blog = await findById(id);
+  const { title, category, tags, createdAt, thumnail, content, viewCnt } =
+    getData;
 
   return (
     <>
@@ -47,6 +49,7 @@ export default async function Page({ params }: { params: { id: number } }) {
           />
         )}
         <MarkdownViewer source={content} className="mt-8 w-full" />
+        <ViewCount viewCnt={viewCnt} />
       </div>
       <ScrollToTopButton />
     </>

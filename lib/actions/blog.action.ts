@@ -212,3 +212,22 @@ export async function createMDX(
     throw unauthorized();
   }
 }
+
+export async function postViewCookie(id: number) {
+  try {
+    const response = await fetch(`${SERVER_URL}/blog/${id}/view`, {
+      method: "POST",
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("Failed to increase view count:", errorText);
+      return false;
+    }
+
+    return true;
+  } catch (error) {
+    console.error("Error in postViewCookie:", error);
+    return false;
+  }
+}
