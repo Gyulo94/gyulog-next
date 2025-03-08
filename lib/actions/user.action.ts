@@ -1,5 +1,8 @@
 "use server";
 
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { getServerSession } from "next-auth";
+import { SERVER_URL } from "../constants";
 import { FormState, LoginFormSchema } from "../schema";
 
 export async function validateLoginForm(
@@ -17,4 +20,48 @@ export async function validateLoginForm(
   }
 
   return { data: validationFields.data };
+}
+
+export const updateUser = async (name: string) => {
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    throw new Error("No session found");
+  }
+  const response = await fetch(`${SERVER_URL}/user/${session.user.email}`, {
+    method: "PATCH",
+    body: JSON.stringify({ name }),
+    headers: {
+      "Content-Type": "application/json",
+      authorization: `Bearer ${session.backendTokens.access_token}`,
+    },
+  });
+  if (!response.ok) {
+    throw new Error("Failed to update user");
+  }
+  const result = await response.json();
+  return result.name;
+};
+
+export async function updateProfileImage(formData: FormData) {
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    throw new Error("No session found");
+  }
+
+  const response = await fetch(
+    `${SERVER_URL}/user/profile-image/${session.user.email}`,
+    {
+      method: "PATCH",
+      body: formData,
+      headers: {
+        authorization: `Bearer ${session.backendTokens.access_token}`,
+      },
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to upload profileImages");
+  }
+  const result = await response.json();
+  return result.profileImage;
 }

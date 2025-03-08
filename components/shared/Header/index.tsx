@@ -11,7 +11,12 @@ import { NavMenu } from "./nav-menu";
 
 export default function Header() {
   const pathname = usePathname();
-  const hideHeaderPaths = ["/admin", "/admin/login", "/admin/logout"];
+  const hideHeaderPaths = [
+    "/admin",
+    "/admin/login",
+    "/admin/logout",
+    "/admin/profile",
+  ];
   const { data: session } = useSession();
 
   if (hideHeaderPaths.includes(pathname)) {

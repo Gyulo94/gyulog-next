@@ -6,7 +6,12 @@ import { Icons } from "../ui/icons";
 
 export default function Footer() {
   const pathname = usePathname();
-  const hideFooterPaths = ["/admin", "/admin/login", "/admin/logout"];
+  const hideFooterPaths = [
+    "/admin",
+    "/admin/login",
+    "/admin/logout",
+    "/admin/profile",
+  ];
 
   if (hideFooterPaths.includes(pathname)) {
     return null;

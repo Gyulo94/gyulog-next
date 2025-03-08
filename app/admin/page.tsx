@@ -15,6 +15,7 @@ import { authOptions } from "../api/auth/[...nextauth]/route";
 export default async function AdminPage() {
   const session = await getServerSession(authOptions);
   if (!session || !session.user) redirect("/admin/login");
+  console.log("session", session);
   return (
     <div className="w-full max-w-md mx-auto">
       <Card>
@@ -43,7 +44,10 @@ export default async function AdminPage() {
             <Button asChild>
               <Link href={`/admin/write`}>글 작성</Link>
             </Button>
-            <Button>
+            <Button asChild>
+              <Link href={`/admin/profile`}>프로필</Link>
+            </Button>
+            <Button asChild>
               <Link href={`/admin/logout`}>로그아웃</Link>
             </Button>
           </div>

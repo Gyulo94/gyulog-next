@@ -4,21 +4,26 @@ import { JWT } from "next-auth/jwt";
 import CredentialsProvider from "next-auth/providers/credentials";
 
 async function refreshToken(token: JWT): Promise<JWT> {
-  const res = await fetch(SERVER_URL + "/auth/refresh", {
-    method: "POST",
-    headers: {
-      authorization: `Refresh ${token.backendTokens.refresh_token}`,
-    },
-  });
+  try {
+    const res = await fetch(SERVER_URL + "/auth/refresh", {
+      method: "POST",
+      headers: {
+        authorization: `Refresh ${token.backendTokens.refresh_token}`,
+      },
+    });
 
-  console.log("refrershed");
+    console.log("refrershed");
 
-  const response = await res.json();
+    const response = await res.json();
 
-  return {
-    ...token,
-    backendTokens: response,
-  };
+    return {
+      ...token,
+      backendTokens: response,
+    };
+  } catch (error) {
+    console.error("Failed to refresh token", error);
+    return { ...token, errpr: "RefreshToken Error" };
+  }
 }
 
 export const authOptions: NextAuthOptions = {
@@ -57,9 +62,16 @@ export const authOptions: NextAuthOptions = {
   ],
 
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
       if (user) return { ...token, ...user };
       if (new Date().getTime() < token.backendTokens.expiresIn) return token;
+      if (trigger === "update" && session !== null) {
+        const { email, name, profileImage } = session;
+        // token의 정보를 업데이트
+        token.user.email = email;
+        token.user.name = name;
+        token.user.profileImage = profileImage;
+      }
 
       return await refreshToken(token);
     },

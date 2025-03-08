@@ -42,6 +42,14 @@ export const blogSchema = z.object({
   createdAt: z.string().datetime(),
   updatedAt: z.string().datetime(),
   tags: tagSchema.array(),
+  viewCnt: z.number(),
+});
+
+export const updateUserSchema = z.object({
+  profileImage: z.string(),
+  name: z.string(),
+  email: z.string().email(),
+  password: z.string(),
 });
 
 export type Blog = z.infer<typeof blogSchema>;
