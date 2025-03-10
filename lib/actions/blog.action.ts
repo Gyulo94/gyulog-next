@@ -231,3 +231,28 @@ export async function postViewCookie(id: number) {
     return false;
   }
 }
+
+export async function editPost(id: number, formData: FormData) {
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    throw new Error("No session found");
+  }
+  console.log("id", formData);
+  const response = await fetch(`${SERVER_URL}/blog/${id}`, {
+    method: "PATCH",
+    body: formData,
+    headers: {
+      authorization: `Bearer ${session.backendTokens.access_token}`,
+    },
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    console.error("Failed to fetch Post:", errorText);
+    throw new Error("Failed to fetch Post");
+  }
+
+  revalidatePath(`/${id}`);
+  const result = await response.json();
+  return result;
+}

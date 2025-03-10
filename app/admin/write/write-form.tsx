@@ -3,30 +3,35 @@
 import { Input } from "@/components/ui/input";
 import { MarkdownEditor } from "@/components/ui/markdown";
 import SubmitButton from "@/components/ui/submitButton";
-import { createMDX, createPost } from "@/lib/actions/blog.action";
+import { createMDX, createPost, editPost } from "@/lib/actions/blog.action";
 import { customStyles } from "@/lib/constants";
-import { Category, Tags } from "@/lib/schema";
+import { Blog, Category, Tags } from "@/lib/schema";
 import { format } from "date-fns";
 import { Image as Photo } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { FormEvent, useRef, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import ReactSelect from "react-select/creatable";
 
 interface WriteFormProps {
   categoryList: Category[];
   tagsList: Tags[];
+  editData?: Blog;
 }
 
-export default function WriteForm({ categoryList, tagsList }: WriteFormProps) {
+export default function WriteForm({
+  categoryList,
+  tagsList,
+  editData,
+}: WriteFormProps) {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const router = useRouter();
   const titleRef = useRef<HTMLInputElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
   const [category, setCategory] = useState("");
   const [tags, setTags] = useState<string[]>([]);
-  const [content, setContent] = useState("");
+  const [content, setContent] = useState(editData ? editData.content : "");
   const { data: session } = useSession();
 
   const handleImageChange = () => {
@@ -76,10 +81,18 @@ export default function WriteForm({ categoryList, tagsList }: WriteFormProps) {
       createdAt
     );
 
-    const data = await createPost(formData);
+    if (editData) {
+      console.log("editData Id", editData.id);
 
-    if (data.id) router.push(`/${data.id}`);
+      const data = await editPost(editData.id, formData);
+      if (data.id) router.push(`/${data.id}`);
+    } else {
+      const data = await createPost(formData);
+      if (data.id) router.push(`/${data.id}`);
+    }
   };
+
+  useEffect;
 
   return (
     <form onSubmit={handleSubmit}>
@@ -95,6 +108,16 @@ export default function WriteForm({ categoryList, tagsList }: WriteFormProps) {
         {imagePreview ? (
           <Image
             src={imagePreview}
+            alt="미리보기"
+            width={0}
+            height={0}
+            sizes="100vw"
+            className="cursor-pointer mx-auto h-[600px] w-full object-cover rounded-md"
+            onClick={handleImageClick}
+          />
+        ) : editData ? (
+          <Image
+            src={editData.thumnail}
             alt="미리보기"
             width={0}
             height={0}
@@ -118,6 +141,7 @@ export default function WriteForm({ categoryList, tagsList }: WriteFormProps) {
           placeholder="제목"
           className="p-2 mt-5"
           ref={titleRef}
+          defaultValue={editData ? editData.title : ""}
         />
         <ReactSelect
           options={
@@ -129,6 +153,12 @@ export default function WriteForm({ categoryList, tagsList }: WriteFormProps) {
           placeholder="카테고리"
           styles={customStyles}
           isMulti={false}
+          defaultValue={
+            editData && {
+              value: editData?.category.id,
+              label: editData?.category.name,
+            }
+          }
           onChange={(e) => e && setCategory(String(e.value))}
         />
         <ReactSelect
@@ -139,9 +169,14 @@ export default function WriteForm({ categoryList, tagsList }: WriteFormProps) {
           styles={customStyles}
           isMulti
           onChange={(e) => e && setTags(e.map((tag) => tag.value))}
+          defaultValue={
+            editData &&
+            editData.tags.map((tag) => ({ value: tag.name, label: tag.name }))
+          }
         />
         <MarkdownEditor
           height={500}
+          defaultValue={editData ? editData.content : ""}
           value={content}
           onChange={(s) => setContent(s || "")}
         />

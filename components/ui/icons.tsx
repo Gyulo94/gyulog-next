@@ -1,10 +1,12 @@
 import {
   ArrowUpFromLine,
   Bot,
+  Edit,
   Icon as LucidIcon,
   LucideProps,
   Mail,
   Send,
+  Trash2,
 } from "lucide-react";
 
 export type Icon = typeof LucidIcon;
@@ -48,4 +50,6 @@ export const Icons = {
       ></path>
     </svg>
   ),
+  edit: Edit,
+  delete: Trash2,
 };

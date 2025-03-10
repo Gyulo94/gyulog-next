@@ -2,12 +2,16 @@ import Processbar from "@/components/blog/processbar";
 import ScrollToTopButton from "@/components/blog/scroll-to-top-button";
 import ViewCount from "@/components/blog/view-count";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Icons } from "@/components/ui/icons";
 import { MarkdownViewer } from "@/components/ui/markdown";
 import { findById } from "@/lib/actions/blog.action";
 import { Blog, Tags } from "@/lib/schema";
 import { format } from "date-fns";
+import { getServerSession } from "next-auth";
 import Image from "next/image";
 import Link from "next/link";
+import { authOptions } from "../api/auth/[...nextauth]/route";
 
 export default async function Page({ params }: { params: { id: number } }) {
   const { id } = await params;
@@ -15,6 +19,8 @@ export default async function Page({ params }: { params: { id: number } }) {
   const getData: Blog = await findById(id);
   const { title, category, tags, createdAt, thumnail, content, viewCnt } =
     getData;
+
+  const session = await getServerSession(authOptions);
 
   return (
     <>
@@ -36,6 +42,18 @@ export default async function Page({ params }: { params: { id: number } }) {
           </div>
           <div className="text-sm text-gray-500">
             {format(new Date(createdAt), "yyyy년 M월 d일 HH:mm")}
+            {session && session.user && (
+              <div className="flex justify-end gap-2 mt-2">
+                <Button variant="ghost" size="icon" asChild>
+                  <Link href={`/admin/write/${id}`}>
+                    <Icons.edit className="w-6 h-6" />
+                  </Link>
+                </Button>
+                <Button variant="ghost" size="icon">
+                  <Icons.delete className="w-6 h-6" />
+                </Button>
+              </div>
+            )}
           </div>
         </div>
         {thumnail && (
