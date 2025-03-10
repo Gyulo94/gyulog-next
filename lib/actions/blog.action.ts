@@ -237,7 +237,6 @@ export async function editPost(id: number, formData: FormData) {
   if (!session) {
     throw new Error("No session found");
   }
-  console.log("id", formData);
   const response = await fetch(`${SERVER_URL}/blog/${id}`, {
     method: "PATCH",
     body: formData,
@@ -253,6 +252,25 @@ export async function editPost(id: number, formData: FormData) {
   }
 
   revalidatePath(`/${id}`);
+  const result = await response.json();
+  return result;
+}
+
+export async function deletePost(id: number) {
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    throw new Error("No session found");
+  }
+  const response = await fetch(`${SERVER_URL}/blog/${id}`, {
+    method: "DELETE",
+    headers: {
+      authorization: `Bearer ${session.backendTokens.access_token}`,
+    },
+  });
+  if (!response.ok) {
+    throw new Error("Failed to fetch blog");
+  }
+
   const result = await response.json();
   return result;
 }

@@ -1,3 +1,4 @@
+import { DeleteButton } from "@/components/blog/delete-button";
 import Processbar from "@/components/blog/processbar";
 import ScrollToTopButton from "@/components/blog/scroll-to-top-button";
 import ViewCount from "@/components/blog/view-count";
@@ -49,9 +50,8 @@ export default async function Page({ params }: { params: { id: number } }) {
                     <Icons.edit className="w-6 h-6" />
                   </Link>
                 </Button>
-                <Button variant="ghost" size="icon">
-                  <Icons.delete className="w-6 h-6" />
-                </Button>
+
+                <DeleteButton id={id} />
               </div>
             )}
           </div>
