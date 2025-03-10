@@ -2,6 +2,7 @@
 
 import { SessionProvider } from "next-auth/react";
 import { ReactNode } from "react";
+import { Toaster } from "sonner";
 import Footer from "../shared/footer";
 import Header from "../shared/Header";
 import { ThemeProvider } from "./theme-provider";
@@ -21,6 +22,7 @@ export default function Providers({ children }: Props) {
       >
         <Header />
         {children}
+        <Toaster />
         <Footer />
       </ThemeProvider>
     </SessionProvider>

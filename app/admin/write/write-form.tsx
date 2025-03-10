@@ -13,6 +13,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { FormEvent, useEffect, useRef, useState } from "react";
 import ReactSelect from "react-select/creatable";
+import { toast } from "sonner";
 
 interface WriteFormProps {
   categoryList: Category[];
@@ -85,10 +86,16 @@ export default function WriteForm({
       console.log("editData Id", editData.id);
 
       const data = await editPost(editData.id, formData);
-      if (data.id) router.push(`/${data.id}`);
+      if (data.status === "success") {
+        toast.success(data.message);
+        router.push(`/${editData.id}`);
+      }
     } else {
       const data = await createPost(formData);
-      if (data.id) router.push(`/${data.id}`);
+      if (data.status === "success") {
+        toast.success(data.message);
+        router.push(`/${data.id}`);
+      }
     }
   };
 

@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { deletePost } from "@/lib/actions/blog.action";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "sonner";
 import { Icons } from "../ui/icons";
 
 export function DeleteButton({ id }: { id: number }) {
@@ -25,11 +26,12 @@ export function DeleteButton({ id }: { id: number }) {
     setLoading(true);
     try {
       const result = await deletePost(id);
-      if (result) {
+      if (result.status === "success") {
+        toast.success(result.message);
         router.push("/");
       }
     } catch (error) {
-      console.error("Failed to delete post:", error);
+      toast.error("글 삭제에 실패했습니다.");
     } finally {
       setLoading(false);
     }
