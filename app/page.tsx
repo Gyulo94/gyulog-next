@@ -4,7 +4,6 @@ import TagList from "@/components/blog/tag-list";
 import Container from "@/components/shared/container";
 import { PaginationWithLinks } from "@/components/ui/pagination-with-links";
 import { findAll } from "@/lib/actions/blog.action";
-import { notFound } from "next/navigation";
 
 interface HomeProps {
   searchParams: {
@@ -17,7 +16,6 @@ export default async function Home({ searchParams }: HomeProps) {
   const pageSize = parseInt((take as string) || "8");
   const getData = await findAll(currentPage, pageSize);
 
-  if (!getData.blogs.length) notFound();
   return (
     <Container>
       <Banner data="gyulog" />
