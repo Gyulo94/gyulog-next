@@ -1,3 +1,4 @@
+import Comments from "@/components/blog/Comment/comments";
 import { DeleteButton } from "@/components/blog/delete-button";
 import Processbar from "@/components/blog/processbar";
 import ScrollToTopButton from "@/components/blog/scroll-to-top-button";
@@ -68,6 +69,7 @@ export default async function Page({ params }: { params: { id: number } }) {
         )}
         <MarkdownViewer source={content} className="mt-8 w-full" />
         <ViewCount viewCnt={viewCnt} />
+        <Comments blogId={id} />
       </div>
       <ScrollToTopButton />
     </>

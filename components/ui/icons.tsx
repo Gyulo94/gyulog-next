@@ -1,6 +1,9 @@
 import {
   ArrowUpFromLine,
   Bot,
+  ChevronDown,
+  ChevronUp,
+  CornerDownRight,
   Edit,
   Icon as LucidIcon,
   LucideProps,
@@ -52,4 +55,7 @@ export const Icons = {
   ),
   edit: Edit,
   delete: Trash2,
+  reply: CornerDownRight,
+  chevronDown: ChevronDown,
+  chevronUp: ChevronUp,
 };

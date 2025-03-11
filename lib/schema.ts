@@ -52,6 +52,23 @@ export const updateUserSchema = z.object({
   password: z.string(),
 });
 
+export const createCommentSchema = z.object({
+  blogId: z.number(),
+  content: z.string(),
+  author: z.string(),
+  password: z.string(),
+  userId: z.string().optional(),
+  parentId: z.number().optional(),
+});
+
 export type Blog = z.infer<typeof blogSchema>;
 export type Tags = z.infer<typeof tagSchema>;
 export type Category = z.infer<typeof categorySchema>;
+export type Comment = z.infer<typeof createCommentSchema> & {
+  id: string;
+  profileImage: string;
+  createdAt: string;
+  updatedAt: string;
+  isDeleted: boolean;
+  replies: Comment[];
+};
