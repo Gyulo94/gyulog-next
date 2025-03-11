@@ -21,11 +21,13 @@ import { authOptions } from "../api/auth/[...nextauth]/route";
 //   return post;
 // })
 
+interface detailProps {
+  params: { id: number };
+}
+
 export async function generateMetadata({
   params,
-}: {
-  params: { id: string };
-}): Promise<Metadata> {
+}: detailProps): Promise<Metadata> {
   const { id } = await params;
   const getData: Blog = await findById(Number(id));
   const { title, thumbnail, content } = getData;
@@ -42,10 +44,10 @@ export async function generateMetadata({
   };
 }
 
-export default async function Page({ params }: { params: { id: number } }) {
+export default async function Page({ params }: detailProps) {
   const { id } = await params;
 
-  const getData: Blog = await findById(id);
+  const getData: Blog = await findById(Number(id));
   const { title, category, tags, createdAt, thumbnail, content, viewCnt } =
     getData;
 
