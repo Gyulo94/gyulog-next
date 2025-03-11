@@ -9,6 +9,8 @@ import {
   updateComment,
 } from "@/lib/actions/comment.action";
 import { Comment } from "@/lib/schema";
+
+import Loader from "@/components/shared/loader";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
 import CommentData from "./comment-data";
@@ -207,7 +209,9 @@ export default function Comments({ blogId }: { blogId: number }) {
         <CommentForm setComments={setComments} blogId={blogId} />
 
         {loading ? (
-          <div className="flex justify-center my-6">...처리중</div>
+          <div className="flex justify-center my-6">
+            <Loader />
+          </div>
         ) : (
           <div className="mt-6">
             {comments.length === 0 ? (
