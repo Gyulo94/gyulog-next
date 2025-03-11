@@ -8,14 +8,14 @@ import { Card, CardFooter, CardHeader, CardTitle } from "../ui/card";
 export default function PostCard({
   id,
   title,
-  thumnail,
+  thumbnail,
   category,
   tags,
   createdAt,
 }: {
   id: number;
   title: string;
-  thumnail: string;
+  thumbnail: string;
   category: string;
   tags: Tags[];
   createdAt: string;
@@ -27,7 +27,7 @@ export default function PostCard({
           <div className="relative aspect-[1.8/1]  w-full">
             <Image
               className="object-cover"
-              src={thumnail}
+              src={thumbnail}
               fill
               sizes="360px"
               priority

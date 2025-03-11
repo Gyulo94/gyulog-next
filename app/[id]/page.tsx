@@ -19,7 +19,7 @@ export default async function Page({ params }: { params: { id: number } }) {
   const { id } = await params;
 
   const getData: Blog = await findById(id);
-  const { title, category, tags, createdAt, thumnail, content, viewCnt } =
+  const { title, category, tags, createdAt, thumbnail, content, viewCnt } =
     getData;
 
   const session = await getServerSession(authOptions);
@@ -57,9 +57,9 @@ export default async function Page({ params }: { params: { id: number } }) {
             )}
           </div>
         </div>
-        {thumnail && (
+        {thumbnail && (
           <Image
-            src={thumnail}
+            src={thumbnail}
             width={0}
             height={0}
             sizes="100vw"

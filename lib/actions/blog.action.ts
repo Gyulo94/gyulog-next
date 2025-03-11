@@ -34,7 +34,7 @@ export async function findAll(page: number, take: number, title?: string) {
   const result = await response.json();
 
   result.blogs = result.blogs.map((blog: Blog) => {
-    blog.thumnail = convertToAbsoluteUrl(blog.thumnail);
+    blog.thumbnail = convertToAbsoluteUrl(blog.thumbnail);
     return blog;
   });
   return result;
@@ -56,7 +56,7 @@ export async function findByBot(title?: string) {
   const result = await response.json();
 
   const blog = result.map((blog: Blog) => {
-    blog.thumnail = convertToAbsoluteUrl(blog.thumnail);
+    blog.thumbnail = convertToAbsoluteUrl(blog.thumbnail);
     return blog;
   });
   return blog;
@@ -93,7 +93,7 @@ export async function findByCategory(
   const result = await response.json();
   // 이미지 URL을 절대 URL로 변환
   result.blogs = result.blogs.map((blog: Blog) => {
-    blog.thumnail = convertToAbsoluteUrl(blog.thumnail);
+    blog.thumbnail = convertToAbsoluteUrl(blog.thumbnail);
     return blog;
   });
   return result;
@@ -130,7 +130,7 @@ export async function findByTag(
   const result = await response.json();
   // 이미지 URL을 절대 URL로 변환
   result.blogs = result.blogs.map((blog: Blog) => {
-    blog.thumnail = convertToAbsoluteUrl(blog.thumnail);
+    blog.thumbnail = convertToAbsoluteUrl(blog.thumbnail);
     return blog;
   });
   return result;
@@ -144,7 +144,7 @@ export async function findById(id: number) {
     throw new Error("Failed to fetch blog");
   }
   const result = await response.json();
-  result.thumnail = convertToAbsoluteUrl(result.thumnail);
+  result.thumbnail = convertToAbsoluteUrl(result.thumbnail);
   return result;
 }
 

@@ -34,7 +34,7 @@ export const categorySchema = z.object({
 export const blogSchema = z.object({
   id: z.number(),
   title: z.string(),
-  thumnail: z.string(),
+  thumbnail: z.string(),
   content: z.string(),
   userId: z.string(),
   category: categorySchema,

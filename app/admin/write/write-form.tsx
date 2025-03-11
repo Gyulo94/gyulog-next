@@ -65,7 +65,7 @@ export default function WriteForm({
     tags.forEach((tag) => formData.append("tags[]", String(tag)));
 
     if (fileRef.current?.files?.[0]) {
-      formData.append("thumnail", fileRef.current.files[0]);
+      formData.append("thumbnail", fileRef.current.files[0]);
     }
 
     const mdxTags = tags.join(", ");
@@ -124,7 +124,7 @@ export default function WriteForm({
           />
         ) : editData ? (
           <Image
-            src={editData.thumnail}
+            src={editData.thumbnail}
             alt="미리보기"
             width={0}
             height={0}

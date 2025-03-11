@@ -120,7 +120,7 @@ export default function ChatPage() {
                       key={msg.id}
                       id={msg.blog.id}
                       title={msg.blog.title}
-                      thumnail={msg.blog.thumnail}
+                      thumbnail={msg.blog.thumbnail}
                       category={msg.blog.category.name}
                       tags={msg.blog.tags}
                       createdAt={msg.blog.createdAt}

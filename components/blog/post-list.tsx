@@ -10,7 +10,7 @@ export default function PostList({ data }: { data: Blog[] }) {
             key={blog.id}
             id={blog.id}
             title={blog.title}
-            thumnail={blog.thumnail}
+            thumbnail={blog.thumbnail}
             category={blog.category.name}
             tags={blog.tags}
             createdAt={blog.createdAt}
