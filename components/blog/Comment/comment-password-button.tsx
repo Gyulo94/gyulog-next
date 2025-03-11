@@ -89,7 +89,7 @@ export function CommentPasswordButton({
               />
             </div>
           </div>
-          <DialogFooter className="sm:justify-end mt-5">
+          <DialogFooter className="sm:justify-end gap-y-2 mt-5">
             <DialogClose asChild>
               <Button type="button" variant="secondary">
                 닫기

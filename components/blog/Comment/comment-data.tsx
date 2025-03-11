@@ -1,13 +1,14 @@
 import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/ui/icons";
 import { Input } from "@/components/ui/input";
+import SubmitButton from "@/components/ui/submitButton";
 import { Textarea } from "@/components/ui/textarea";
 import { Comment } from "@/lib/schema";
 import { format } from "date-fns";
 import { AnimatePresence, motion } from "framer-motion";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CommentPasswordButton } from "./comment-password-button";
 
 /**
@@ -51,6 +52,17 @@ function CommentData({
 
   const { data: session } = useSession();
   const userId = session?.user.id || undefined;
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    handleResize(); // 초기 실행
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   // Submits a new reply to this comment
   const handleReplySubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -78,24 +90,17 @@ function CommentData({
 
   return (
     <div className="w-full break-words">
-      {/* The main “bubble/card” for this comment */}
       <div className="dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm p-4 mb-4">
-        <div className="flex items-start space-x-5">
-          {/* Avatar */}
-
+        <div className="flex items-start justify-center space-x-5">
           <div className="h-10 w-10 relative">
             <Image
               src={comment.profileImage}
               alt={comment.author}
               fill
-              className={`${
-                comment.author === session?.user.name && "rounded-full"
-              } object-cover`}
+              className={`rounded-full object-cover`}
             />
           </div>
-          {/* Main content area */}
           <div className="flex-1">
-            {/* Top row: user name + actions (if not deleted) */}
             <div className="flex justify-between items-start">
               <p className="font-bold text-sm md:text-base text-gray-800 dark:text-gray-100 capitalize">
                 {comment.author}
@@ -117,19 +122,11 @@ function CommentData({
               )}
             </div>
 
-            {/* Display the comment text:
-                - If deleted, show "This comment has been deleted" text
-                - If editing, show an edit form
-                - Otherwise, show the original content
-            */}
             {isDeleted ? (
-              // Comment is deleted
               <p className="italic text-sm md:text-base text-gray-500 dark:text-gray-400 mt-3">
                 {"댓글이 삭제되었습니다."}
-                {/* Usually "This comment has been deleted" */}
               </p>
             ) : isEditing ? (
-              // Editing form
               <form onSubmit={handleEditSubmit} className="mt-2">
                 <Textarea
                   value={editedContent}
@@ -157,44 +154,24 @@ function CommentData({
                 {comment.content}
               </p>
             )}
-            <div className="mt-3 flex items-center justify-between space-x-4 text-sm">
-              <div className="flex items-center">
-                <Button
-                  onClick={() => setShowReplyForm(!showReplyForm)}
-                  variant={"link"}
-                  className="flex items-center text-blue-600 hover:underline"
-                >
-                  답글 작성
-                </Button>
-                {replyCount > 0 && (
-                  <Button
-                    onClick={() => setAreRepliesVisible(!areRepliesVisible)}
-                    variant={"link"}
-                    className="flex items-center text-blue-600 hover:underline"
-                  >
-                    {areRepliesVisible ? (
-                      <>
-                        <Icons.chevronUp />
-                        <p>답글 숨기기</p>
-                      </>
-                    ) : (
-                      <>
-                        <Icons.chevronDown />
-                        <p>답글 보기 ({`${replyCount}`})</p>
-                      </>
-                    )}
-                  </Button>
-                )}
-              </div>
-              <p className="text-sm text-gray-500">
-                {format(comment.createdAt, "yyyy-MM-dd HH:mm")}
-              </p>
-            </div>
+          </div>
+        </div>
 
-            {showReplyForm && (
-              <form onSubmit={handleReplySubmit} className="mt-3">
-                <div className="flex gap-2">
-                  <div className="flex flex-col gap-2">
+        {showReplyForm &&
+          (isMobile ? (
+            <form onSubmit={handleReplySubmit} className="mt-10">
+              {session && session.user ? (
+                <Textarea
+                  placeholder="답글 작성하기"
+                  rows={2}
+                  required
+                  value={reply}
+                  onChange={(e) => e && setReply(e.target.value)}
+                  className="w-full border border-gray-200 dark:border-gray-700 p-2"
+                />
+              ) : (
+                <div className="flex flex-col gap-2">
+                  <div className="flex gap-2">
                     <Input
                       type="text"
                       placeholder="이름"
@@ -221,27 +198,100 @@ function CommentData({
                     className="w-full border border-gray-200 dark:border-gray-700 p-2"
                   />
                 </div>
-                <div className="flex justify-end space-x-2 mt-2">
-                  <Button
-                    type="button"
-                    onClick={() => setShowReplyForm(false)}
-                    variant={"ghost"}
-                    className="px-3 py-1 text-sm"
-                  >
-                    취소
-                  </Button>
-                  <Button type="submit" className="px-3 py-1 text-sm">
-                    작성
-                  </Button>
+              )}
+              <div className="flex justify-end space-x-2 mt-2">
+                <Button
+                  type="button"
+                  onClick={() => setShowReplyForm(false)}
+                  variant={"ghost"}
+                  className="px-3 py-1 text-sm"
+                >
+                  취소
+                </Button>
+                <SubmitButton>작성</SubmitButton>
+              </div>
+            </form>
+          ) : (
+            <form onSubmit={handleReplySubmit} className="mt-10">
+              <div className="flex gap-2">
+                <div className="flex flex-col gap-2">
+                  <Input
+                    type="text"
+                    placeholder="이름"
+                    value={author}
+                    onChange={(e) => setAuthor(e.target.value)}
+                    className="w-full border border-gray-200 dark:border-gray-700 p-2"
+                    required
+                  />
+                  <Input
+                    type="password"
+                    placeholder="비밀번호"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="w-full border border-gray-200 dark:border-gray-700 p-2"
+                    required
+                  />
                 </div>
-              </form>
+                <Textarea
+                  placeholder="답글 작성하기"
+                  rows={2}
+                  required
+                  value={reply}
+                  onChange={(e) => e && setReply(e.target.value)}
+                  className="w-full border border-gray-200 dark:border-gray-700 p-2"
+                />
+              </div>
+              <div className="flex justify-end space-x-2 mt-2">
+                <Button
+                  type="button"
+                  onClick={() => setShowReplyForm(false)}
+                  variant={"ghost"}
+                  className="px-3 py-1 text-sm"
+                >
+                  취소
+                </Button>
+                <SubmitButton>작성</SubmitButton>
+              </div>
+            </form>
+          ))}
+
+        <div className="mt-3 flex items-center justify-between space-x-4 text-sm">
+          <div className="flex items-center">
+            <Button
+              onClick={() => setShowReplyForm(!showReplyForm)}
+              variant={"link"}
+              className="flex items-center text-blue-600 hover:underline"
+            >
+              답글 작성
+            </Button>
+            {replyCount > 0 && (
+              <Button
+                onClick={() => setAreRepliesVisible(!areRepliesVisible)}
+                variant={"link"}
+                className="flex items-center text-blue-600 hover:underline"
+              >
+                {areRepliesVisible ? (
+                  <>
+                    <Icons.chevronUp />
+                    <p>답글 숨기기</p>
+                  </>
+                ) : (
+                  <>
+                    <Icons.chevronDown />
+                    <p>답글 보기 ({`${replyCount}`})</p>
+                  </>
+                )}
+              </Button>
             )}
           </div>
+          <p className="text-sm text-gray-500">
+            {isMobile
+              ? format(comment.createdAt, "yyyy년 M월 d일")
+              : format(comment.createdAt, "yyyy년 M월 d일 HH:mm")}
+          </p>
         </div>
       </div>
 
-      {/* Collapsible Nested Replies (still show if parent's deleted, unless you prefer otherwise) */}
-      {/* {areRepliesVisible && comment.replies && comment.replies.length > 0 && ( */}
       <AnimatePresence>
         {areRepliesVisible && (
           <motion.div
@@ -263,16 +313,6 @@ function CommentData({
           </motion.div>
         )}
       </AnimatePresence>
-      {/* )} */}
-
-      {/* Delete Confirmation Modal */}
-      {/* <Modal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onConfirm={handleDeleteConfirm}
-        title="Delete Comment"
-        message="Are you sure you want to delete this comment? This action cannot be undone."
-      /> */}
     </div>
   );
 }

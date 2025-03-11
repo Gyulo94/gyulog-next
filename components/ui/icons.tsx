@@ -8,6 +8,7 @@ import {
   Icon as LucidIcon,
   LucideProps,
   Mail,
+  Menu,
   Send,
   Trash2,
 } from "lucide-react";
@@ -58,4 +59,5 @@ export const Icons = {
   reply: CornerDownRight,
   chevronDown: ChevronDown,
   chevronUp: ChevronUp,
+  menu: Menu,
 };

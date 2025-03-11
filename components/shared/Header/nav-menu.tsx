@@ -20,7 +20,7 @@ export function NavMenu() {
         <NavigationMenuItem>
           <NavigationMenuTrigger>카테고리</NavigationMenuTrigger>
           <NavigationMenuContent>
-            <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
+            <ul className="grid w-[400px] gap-3 p-4 md:grid-cols-2">
               {category.map((category) => (
                 <ListItem
                   key={category.title}

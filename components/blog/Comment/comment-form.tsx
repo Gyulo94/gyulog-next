@@ -4,7 +4,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { createComment } from "@/lib/actions/comment.action";
 import { Comment } from "@/lib/schema";
 import { useSession } from "next-auth/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 function CommentForm({
@@ -20,6 +20,17 @@ function CommentForm({
   const [comment, setComment] = useState("");
   const [author, setAuthor] = useState("");
   const [password, setPassword] = useState("");
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    handleResize(); // 초기 실행
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -63,6 +74,34 @@ function CommentForm({
           onChange={(e) => e && setComment(e.target.value)}
           required
         />
+      ) : isMobile ? (
+        <div className="flex flex-col gap-2 justify-center items-center">
+          <div className="flex gap-2">
+            <Input
+              type="text"
+              placeholder="이름"
+              value={author}
+              onChange={(e) => e && setAuthor(e.target.value)}
+              required
+            />
+            <Input
+              type="password"
+              placeholder="비밀번호"
+              value={password}
+              onChange={(e) => e && setPassword(e.target.value)}
+              required
+            />
+          </div>
+          <Textarea
+            name="comment"
+            placeholder="댓글 작성"
+            className="w-full"
+            rows={3}
+            value={comment}
+            onChange={(e) => e && setComment(e.target.value)}
+            required
+          />
+        </div>
       ) : (
         <div className="flex gap-2 justify-center items-center">
           <div className="flex flex-col gap-2">
