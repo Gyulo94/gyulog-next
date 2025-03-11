@@ -28,8 +28,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { id } = await params;
   const getData: Blog = await findById(id);
-  const { title, category, tags, createdAt, thumbnail, content, viewCnt } =
-    getData;
+  const { title, thumbnail, content } = getData;
   return {
     title,
     description: content,

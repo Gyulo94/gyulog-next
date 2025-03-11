@@ -31,6 +31,7 @@ export function DeleteButton({ id }: { id: number }) {
         router.push("/");
       }
     } catch (error) {
+      console.error("Failed to delete post", error);
       toast.error("글 삭제에 실패했습니다.");
     } finally {
       setLoading(false);

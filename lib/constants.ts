@@ -1,3 +1,5 @@
+import { StylesConfig } from "react-select";
+
 export const APP_NAME = process.env.APP_NAME;
 export const APP_DESCRIPTION = process.env.APP_DESCRIPTION;
 export const BASE_URL = process.env.BASE_URL;
@@ -47,24 +49,21 @@ export const category: { title: string; href: string; description: string }[] =
     },
   ];
 
-export const customStyles = {
-  control: (provided: any, state: any) => ({
+export const customStyles: StylesConfig = {
+  control: (provided, state) => ({
     ...provided,
     backgroundColor: "#030712",
-    border:
-      state.isFocused && state.isSelected
-        ? "1px solid #5D3CEF"
-        : "1px solid #4b5563",
+    border: state.isFocused ? "1px solid #5D3CEF" : "1px solid #4b5563",
     "&:hover": {
       border: "1px solid #5D3CEF",
     },
   }),
-  menu: (provided: any) => ({
+  menu: (provided) => ({
     ...provided,
     backgroundColor: "#030712",
     border: "1px solid #4b5563",
   }),
-  option: (provided: any, state: any) => ({
+  option: (provided, state) => ({
     ...provided,
     backgroundColor: state.isSelected
       ? "#030712"
@@ -78,11 +77,11 @@ export const customStyles = {
       color: "#fff",
     },
   }),
-  singleValue: (provided: any) => ({
+  singleValue: (provided) => ({
     ...provided,
     color: "#fff",
   }),
-  multiValue: (provided: any) => ({
+  multiValue: (provided) => ({
     ...provided,
     color: "#fff",
     backgroundColor: "#5D3CEF",

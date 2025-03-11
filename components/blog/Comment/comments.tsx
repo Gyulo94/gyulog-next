@@ -11,7 +11,6 @@ import {
 import { Comment } from "@/lib/schema";
 
 import Loader from "@/components/shared/loader";
-import { useSession } from "next-auth/react";
 import { toast } from "sonner";
 import CommentData from "./comment-data";
 import CommentForm from "./comment-form";
@@ -19,8 +18,6 @@ import CommentForm from "./comment-form";
 export default function Comments({ blogId }: { blogId: number }) {
   const [comments, setComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState(true);
-  const { data: session } = useSession();
-  const userId = session?.user?.id;
 
   const calculateCommentCount = (commentsArray: Comment[]) => {
     let count = commentsArray.length;
@@ -83,8 +80,11 @@ export default function Comments({ blogId }: { blogId: number }) {
     return nestedComments;
   };
 
-  const markCommentAsDeleted = (commentList: any, targetId: any) => {
-    return commentList.map((comment: any) => {
+  const markCommentAsDeleted = (
+    commentList: Comment[],
+    targetId: string
+  ): Comment[] => {
+    return commentList.map((comment: Comment) => {
       if (comment.id === targetId) {
         return {
           ...comment,

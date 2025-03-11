@@ -6,10 +6,6 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { category } from "@/lib/constants";
 import Link from "next/link";
 
-const SHEET_SIDES = ["top", "right", "bottom", "left"] as const;
-
-type SheetSide = (typeof SHEET_SIDES)[number];
-
 export function MobileMenuButton() {
   return (
     <div>
