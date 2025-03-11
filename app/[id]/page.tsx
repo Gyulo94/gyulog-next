@@ -24,10 +24,10 @@ import { authOptions } from "../api/auth/[...nextauth]/route";
 export async function generateMetadata({
   params,
 }: {
-  params: { id: number };
+  params: { id: string };
 }): Promise<Metadata> {
   const { id } = await params;
-  const getData: Blog = await findById(id);
+  const getData: Blog = await findById(Number(id));
   const { title, thumbnail, content } = getData;
   return {
     title,
