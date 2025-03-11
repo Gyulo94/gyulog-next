@@ -1,12 +1,11 @@
 "use server";
 
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { getServerSession } from "next-auth";
+import { getServerAuthSession } from "../auth";
 import { SERVER_URL } from "../constants";
 import { convertToAbsoluteUrl } from "../utils";
 
 export async function uploadImage(formData: FormData) {
-  const session = await getServerSession(authOptions);
+  const session = await getServerAuthSession();
   if (!session) {
     throw new Error("No session found");
   }

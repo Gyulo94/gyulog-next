@@ -1,8 +1,7 @@
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { findAllCategory } from "@/lib/actions/category.actions";
 import { findAllTags } from "@/lib/actions/tag.actions";
+import { getServerAuthSession } from "@/lib/auth";
 import { Metadata } from "next";
-import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import WriteForm from "./write-form";
 
@@ -11,7 +10,7 @@ export const metadata: Metadata = {
 };
 
 export default async function WritePage() {
-  const session = await getServerSession(authOptions);
+  const session = await getServerAuthSession();
   if (!session || !session.user) redirect("/admin/login");
   const category = await findAllCategory();
   const tags = await findAllTags();

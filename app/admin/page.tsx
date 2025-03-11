@@ -6,14 +6,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { getServerSession } from "next-auth";
+import { getServerAuthSession } from "@/lib/auth";
 import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { authOptions } from "../api/auth/[...nextauth]/route";
 
 export default async function AdminPage() {
-  const session = await getServerSession(authOptions);
+  const session = await getServerAuthSession();
   if (!session || !session.user) redirect("/admin/login");
   console.log("session", session);
   return (

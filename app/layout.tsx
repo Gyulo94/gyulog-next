@@ -17,6 +17,7 @@ export const metadata: Metadata = {
     default: APP_NAME as string,
   },
   description: APP_DESCRIPTION,
+  metadataBase: new URL("https://gyulog.vercel.app"),
   openGraph: {
     title: {
       template: `%s | Gyulog`,

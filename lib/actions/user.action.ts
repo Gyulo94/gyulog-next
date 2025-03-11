@@ -1,7 +1,6 @@
 "use server";
 
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { getServerSession } from "next-auth";
+import { getServerAuthSession } from "../auth";
 import { SERVER_URL } from "../constants";
 import { FormState, LoginFormSchema } from "../schema";
 
@@ -23,7 +22,7 @@ export async function validateLoginForm(
 }
 
 export const updateUser = async (name: string) => {
-  const session = await getServerSession(authOptions);
+  const session = await getServerAuthSession();
   if (!session) {
     throw new Error("No session found");
   }
@@ -43,7 +42,7 @@ export const updateUser = async (name: string) => {
 };
 
 export async function updateProfileImage(formData: FormData) {
-  const session = await getServerSession(authOptions);
+  const session = await getServerAuthSession();
   if (!session) {
     throw new Error("No session found");
   }

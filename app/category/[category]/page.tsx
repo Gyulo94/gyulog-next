@@ -12,9 +12,7 @@ export const metadata: Metadata = {
 };
 
 interface CategoryProps {
-  params: {
-    category: string;
-  };
+  params: Promise<{ category: string }>;
   searchParams: {
     [key: string]: string | string[] | undefined;
   };

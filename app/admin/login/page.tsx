@@ -7,9 +7,8 @@ import {
 } from "@/components/ui/card";
 import { APP_NAME } from "@/lib/constants";
 // import { getSession } from "@/lib/session";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { getServerAuthSession } from "@/lib/auth";
 import { Metadata } from "next";
-import { getServerSession } from "next-auth";
 import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -20,7 +19,7 @@ export const metadata: Metadata = {
 };
 
 const SignIn = async () => {
-  const session = await getServerSession(authOptions);
+  const session = await getServerAuthSession();
   if (session && session.user) redirect("/admin");
   return (
     <div className="w-full max-w-md mx-auto">

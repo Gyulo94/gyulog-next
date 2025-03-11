@@ -1,11 +1,10 @@
 "use server";
 
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import fs from "fs";
-import { getServerSession } from "next-auth";
 import { revalidatePath } from "next/cache";
 import { unauthorized } from "next/navigation";
 import { join } from "path";
+import { getServerAuthSession } from "../auth";
 import { SERVER_URL } from "../constants";
 import { Blog } from "../schema";
 import { convertToAbsoluteUrl } from "../utils";
@@ -149,7 +148,7 @@ export async function findById(id: number) {
 }
 
 export async function createPost(formData: FormData) {
-  const session = await getServerSession(authOptions);
+  const session = await getServerAuthSession();
   if (!session) {
     throw new Error("No session found");
   }
@@ -183,7 +182,7 @@ export async function createMDX(
   mdxTags: string,
   createdAt: string
 ) {
-  const session = await getServerSession(authOptions);
+  const session = await getServerAuthSession();
   if (!session) {
     throw new Error("No session found");
   }
@@ -233,7 +232,7 @@ export async function postViewCookie(id: number) {
 }
 
 export async function editPost(id: number, formData: FormData) {
-  const session = await getServerSession(authOptions);
+  const session = await getServerAuthSession();
   if (!session) {
     throw new Error("No session found");
   }
@@ -257,7 +256,7 @@ export async function editPost(id: number, formData: FormData) {
 }
 
 export async function deletePost(id: number) {
-  const session = await getServerSession(authOptions);
+  const session = await getServerAuthSession();
   if (!session) {
     throw new Error("No session found");
   }

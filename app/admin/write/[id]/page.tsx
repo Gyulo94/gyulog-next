@@ -1,9 +1,8 @@
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { findById } from "@/lib/actions/blog.action";
 import { findAllCategory } from "@/lib/actions/category.actions";
 import { findAllTags } from "@/lib/actions/tag.actions";
+import { getServerAuthSession } from "@/lib/auth";
 import { Metadata } from "next";
-import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import WriteForm from "../write-form";
 
@@ -11,13 +10,13 @@ export const metadata: Metadata = {
   title: "Write",
 };
 
-export default async function WritePage({
-  params,
-}: {
-  params: { id: number };
+export default async function WritePage(props: {
+  params: Promise<{ id: number }>;
 }) {
-  const { id } = await params;
-  const session = await getServerSession(authOptions);
+  const { id } = await props.params;
+  const session = await getServerAuthSession();
+  console.log(session);
+
   if (!session || !session.user) redirect("/admin/login");
   const getData = await findById(id);
   const category = await findAllCategory();

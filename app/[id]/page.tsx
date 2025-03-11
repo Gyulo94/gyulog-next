@@ -8,28 +8,23 @@ import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/ui/icons";
 import { MarkdownViewer } from "@/components/ui/markdown";
 import { findById } from "@/lib/actions/blog.action";
+import { getServerAuthSession } from "@/lib/auth";
 import { Blog, Tags } from "@/lib/schema";
 import { format } from "date-fns";
 import { Metadata } from "next";
-import { getServerSession } from "next-auth";
 import Image from "next/image";
 import Link from "next/link";
-import { authOptions } from "../api/auth/[...nextauth]/route";
 
 // const getPost = cache(async (id: number) => {
 //   const post = await findById(id);
 //   return post;
 // })
 
-interface detailProps {
-  params: { id: number };
-}
-
-export async function generateMetadata({
-  params,
-}: detailProps): Promise<Metadata> {
-  const { id } = await params;
-  const getData: Blog = await findById(Number(id));
+export async function generateMetadata(props: {
+  params: Promise<{ id: number }>;
+}): Promise<Metadata> {
+  const { id } = await props.params;
+  const getData: Blog = await findById(id);
   const { title, thumbnail, content } = getData;
   return {
     title,
@@ -37,21 +32,21 @@ export async function generateMetadata({
     openGraph: {
       images: [
         {
-          url: "http://localhost:8000/" + thumbnail,
+          url: process.env.SERVER_URL + "/" + thumbnail,
         },
       ],
     },
   };
 }
 
-export default async function Page({ params }: detailProps) {
-  const { id } = await params;
+export default async function Page(props: { params: Promise<{ id: number }> }) {
+  const { id } = await props.params;
 
-  const getData: Blog = await findById(Number(id));
+  const getData: Blog = await findById(id);
   const { title, category, tags, createdAt, thumbnail, content, viewCnt } =
     getData;
 
-  const session = await getServerSession(authOptions);
+  const session = await getServerAuthSession();
 
   return (
     <>
