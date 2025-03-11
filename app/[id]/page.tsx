@@ -10,10 +10,38 @@ import { MarkdownViewer } from "@/components/ui/markdown";
 import { findById } from "@/lib/actions/blog.action";
 import { Blog, Tags } from "@/lib/schema";
 import { format } from "date-fns";
+import { Metadata } from "next";
 import { getServerSession } from "next-auth";
 import Image from "next/image";
 import Link from "next/link";
 import { authOptions } from "../api/auth/[...nextauth]/route";
+
+// const getPost = cache(async (id: number) => {
+//   const post = await findById(id);
+//   return post;
+// })
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { id: number };
+}): Promise<Metadata> {
+  const { id } = await params;
+  const getData: Blog = await findById(id);
+  const { title, category, tags, createdAt, thumbnail, content, viewCnt } =
+    getData;
+  return {
+    title,
+    description: content,
+    openGraph: {
+      images: [
+        {
+          url: "http://localhost:8000/" + thumbnail,
+        },
+      ],
+    },
+  };
+}
 
 export default async function Page({ params }: { params: { id: number } }) {
   const { id } = await params;

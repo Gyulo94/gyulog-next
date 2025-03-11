@@ -14,9 +14,28 @@ const pretendard = localFont({
 export const metadata: Metadata = {
   title: {
     template: `%s | Gyulog`,
-    default: APP_NAME,
+    default: APP_NAME as string,
   },
   description: APP_DESCRIPTION,
+  openGraph: {
+    title: {
+      template: `%s | Gyulog`,
+      default: APP_NAME as string,
+    },
+    description: APP_DESCRIPTION,
+    siteName: APP_NAME,
+    // url: "https://gyulog.vercel.app",
+    type: "website",
+    locale: "ko_KR",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 800,
+        height: 600,
+        alt: APP_NAME,
+      },
+    ],
+  },
 };
 
 export default function RootLayout({

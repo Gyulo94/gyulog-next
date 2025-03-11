@@ -4,7 +4,12 @@ import TagList from "@/components/blog/tag-list";
 import Container from "@/components/shared/container";
 import { PaginationWithLinks } from "@/components/ui/pagination-with-links";
 import { findByCategory } from "@/lib/actions/blog.action";
+import { Metadata } from "next";
 import { notFound } from "next/navigation";
+
+export const metadata: Metadata = {
+  title: "Category",
+};
 
 interface CategoryProps {
   params: {
