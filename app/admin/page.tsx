@@ -7,7 +7,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { getServerAuthSession } from "@/lib/auth";
-import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
@@ -20,11 +19,10 @@ export default async function AdminPage() {
       <Card>
         <CardHeader className="space-y-4 flex justify-center items-center">
           <div className="flex justify-center items-center h-28 w-28 relative mb-2">
-            <Image
+            <img
               src={session.user.profileImage || ""}
-              fill
               alt={`user`}
-              className="rounded-full object-cover"
+              className="w-full h-full rounded-full object-cover"
             />
           </div>
           <CardTitle className="text-center text-2xl">
