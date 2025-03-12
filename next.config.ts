@@ -24,6 +24,11 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "img1.daumcdn.net",
       },
+      {
+        protocol: "http",
+        hostname: "118.36.196.85",
+        port: "3306",
+      },
     ],
     domains: ["118.36.196.85"],
   },
