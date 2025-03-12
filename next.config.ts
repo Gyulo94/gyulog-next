@@ -29,7 +29,6 @@ const nextConfig: NextConfig = {
         hostname: "118.36.196.85",
       },
     ],
-    domains: ["118.36.196.85"],
   },
   experimental: {
     serverActions: {
