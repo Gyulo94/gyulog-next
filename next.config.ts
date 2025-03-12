@@ -25,7 +25,7 @@ const nextConfig: NextConfig = {
         hostname: "img1.daumcdn.net",
       },
     ],
-    domains: ["localhost"],
+    domains: ["118.36.196.85"],
   },
   experimental: {
     serverActions: {
