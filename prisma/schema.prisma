@@ -1,0 +1,89 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model User {
+  id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email     String    @unique
+  name      String?
+  password  String
+  image     String?
+  createdAt DateTime  @default(now())
+  role      Role      @default(USER)
+  blogs     Blog[]
+  comments  Comment[]
+}
+
+model Category {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  createdAt DateTime @default(now())
+  blogs     Blog[]
+}
+
+model Blog {
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title       String
+  thumbnail   String
+  slug        String    @unique(map: "blog_slug_key")
+  content     String
+  user        User      @relation(fields: [userId], references: [id])
+  userId      String    @db.Uuid
+  category    Category  @relation(fields: [categoryId], references: [id])
+  categoryId  String
+  viewCnt     Int       @default(0)
+  isPublished Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  tags        Tag[]
+  comments    Comment[]
+}
+
+model Comment {
+  id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  content   String
+  author    String
+  password  String?
+  image     String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  blog      Blog      @relation(fields: [blogId], references: [id])
+  blogId    String    @db.Uuid
+  user      User?     @relation(fields: [userId], references: [id])
+  userId    String?   @db.Uuid
+  isDeleted Boolean   @default(false)
+  parentId  String?   @db.Uuid
+  parent    Comment?  @relation("CommentToReplies", fields: [parentId], references: [id])
+  replies   Comment[] @relation("CommentToReplies")
+}
+
+model Image {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  url       String
+  createdAt DateTime @default(now())
+}
+
+model Tag {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  blogs     Blog[]
+}
