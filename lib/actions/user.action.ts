@@ -2,30 +2,82 @@
 
 import { signIn } from "@/auth";
 import { prisma } from "@/db/prisma";
+import { hashSync } from "bcrypt";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
-import { LoginFormSchema } from "../schema";
+import { LoginFormSchema, SignUpFormSchema } from "../schema";
+import { FormState } from "../types";
 
 export async function signInWithCredentials(
   prevState: unknown,
   formData: FormData
-) {
+): Promise<FormState> {
   try {
-    const user = LoginFormSchema.parse({
+    const validationFields = LoginFormSchema.safeParse({
       email: formData.get("email"),
       password: formData.get("password"),
     });
+    if (!validationFields.success) {
+      return { error: validationFields.error.flatten().fieldErrors };
+    }
 
-    await signIn("credentials", user);
-    const userInfo = await prisma.user.findUnique({
-      where: { email: user.email },
+    await signIn("credentials", {
+      email: validationFields.data.email,
+      password: validationFields.data.password,
+      redirect: false,
     });
+    const user = await prisma.user.findUnique({
+      where: { email: validationFields.data.email },
+    });
+    console.log("user", user);
 
-    return { success: true, message: `${userInfo?.name}님 안녕하세요!` };
+    return { status: 200, message: `${user?.name}님 안녕하세요!` };
   } catch (error) {
     if (isRedirectError(error)) {
       throw error;
     }
-    return { success: false, message: "잘못된 이메일 혹은 비밀번호 입니다." };
+    return { status: 400, message: "잘못된 이메일 혹은 비밀번호 입니다." };
+  }
+}
+
+export async function signUpWithCredentials(
+  prevState: unknown,
+  formData: FormData
+) {
+  try {
+    const validationFields = SignUpFormSchema.safeParse({
+      email: formData.get("email"),
+      name: formData.get("name"),
+      password: formData.get("password"),
+      confirmPassword: formData.get("confirmPassword"),
+    });
+    if (!validationFields.success) {
+      return { error: validationFields.error.flatten().fieldErrors };
+    }
+
+    const hashedPassword = await hashSync(validationFields.data.password, 10);
+    await prisma.user.create({
+      data: {
+        email: validationFields.data.email,
+        name: validationFields.data.name,
+        password: hashedPassword,
+      },
+    });
+
+    await signIn("credentials", {
+      email: validationFields.data.email,
+      password: validationFields.data.password,
+      redirect: false,
+    });
+    const userInfo = await prisma.user.findUnique({
+      where: { email: validationFields.data.email },
+    });
+
+    return { status: 200, message: `${userInfo?.name}님 안녕하세요!` };
+  } catch (error) {
+    if (isRedirectError(error)) {
+      throw error;
+    }
+    return { status: 400, message: "잘못된 이메일 혹은 비밀번호 입니다." };
   }
 }
 

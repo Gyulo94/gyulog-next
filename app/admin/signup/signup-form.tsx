@@ -3,18 +3,15 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import SubmitButton from "@/components/ui/submitButton";
-import { signInWithCredentials } from "@/lib/actions/user.action";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { signUpWithCredentials } from "@/lib/actions/user.action";
 import { useActionState, useEffect } from "react";
 import { toast } from "react-toastify";
 
-const LoginForm = () => {
-  const [state, action] = useActionState(signInWithCredentials, undefined);
-  const { data: session } = useSession();
-  const router = useRouter();
+const SignUpForm = () => {
+  const [state, action] = useActionState(signUpWithCredentials, undefined);
+
   useEffect(() => {
-    const errorFields = ["email", "password"];
+    const errorFields = ["name", "email", "password", "confirmPassword"];
 
     errorFields.forEach((field) => {
       const errorMessage = (
@@ -25,12 +22,8 @@ const LoginForm = () => {
       }
     });
   }, [state?.error]);
-  useEffect(() => {
-    if (state?.status === 200) {
-      toast.success(state.message);
-      router.push("/admin");
-    }
-  }, [state?.status]);
+
+  console.log("state", state);
 
   return (
     <form action={action}>
@@ -45,6 +38,15 @@ const LoginForm = () => {
           />
         </div>
         <div>
+          <Label htmlFor="name">이름</Label>
+          <Input
+            id="name"
+            name="name"
+            type="text"
+            placeholder="이름을 입력하세요."
+          />
+        </div>
+        <div>
           <Label htmlFor="email">비밀번호</Label>
           <Input
             id="password"
@@ -53,12 +55,18 @@ const LoginForm = () => {
             placeholder="비밀번호를 입력하세요."
           />
         </div>
-        {state && state.status == 400 && (
-          <div className="text-center text-destructive">{state.message}</div>
-        )}
+        <div>
+          <Label htmlFor="email">비밀번호 확인</Label>
+          <Input
+            id="password"
+            name="confirmPassword"
+            type="password"
+            placeholder="비밀번호를 재입력하세요."
+          />
+        </div>
         <div>
           <SubmitButton className="w-full" variant="default">
-            로그인
+            회원가입
           </SubmitButton>
         </div>
       </div>
@@ -66,4 +74,4 @@ const LoginForm = () => {
   );
 };
 
-export default LoginForm;
+export default SignUpForm;

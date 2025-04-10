@@ -12,15 +12,15 @@ import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import LoginForm from "./Login-form";
+import SignUpForm from "./signup-form";
 
 export const metadata: Metadata = {
-  title: "로그인",
+  title: "회원가입",
 };
 
-const SignIn = async () => {
+const SignUp = async () => {
   const session = await auth();
-  if (session) redirect("/admin");
+  if (session && session.user) redirect("/admin");
   return (
     <div className="w-full max-w-md mx-auto">
       <Card>
@@ -36,15 +36,15 @@ const SignIn = async () => {
           </Link>
           <CardTitle className="text-center text-2xl">GYULOG</CardTitle>
           <CardDescription className="text-center text-md">
-            어드민 로그인
+            어드민 회원가입
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <LoginForm />
+          <SignUpForm />
         </CardContent>
       </Card>
     </div>
   );
 };
 
-export default SignIn;
+export default SignUp;
