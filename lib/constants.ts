@@ -3,7 +3,6 @@ import { StylesConfig } from "react-select";
 export const APP_NAME = process.env.APP_NAME;
 export const APP_DESCRIPTION = process.env.APP_DESCRIPTION;
 export const BASE_URL = process.env.BASE_URL;
-export const SERVER_URL = process.env.SERVER_URL;
 
 export const category: { title: string; href: string; description: string }[] =
   [

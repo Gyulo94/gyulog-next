@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/card";
 import { APP_NAME } from "@/lib/constants";
 // import { getSession } from "@/lib/session";
-import { getServerAuthSession } from "@/lib/auth";
+import { auth } from "@/auth";
 import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 };
 
 const SignIn = async () => {
-  const session = await getServerAuthSession();
+  const session = await auth();
   if (session && session.user) redirect("/admin");
   return (
     <div className="w-full max-w-md mx-auto">
