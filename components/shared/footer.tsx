@@ -17,7 +17,7 @@ export default function Footer() {
     return null;
   }
   return (
-    <footer className="bg-transparent border-t py-8 mt-10">
+    <footer className="bg-transparent border-t py-4 h-[156px]">
       <div className="container mx-auto px-4 md:px-6">
         <div className="grid grid-cols-1 gap-8 md:flex md:justify-center md:items-center">
           <div className="flex items-center justify-start space-x-8">
@@ -57,9 +57,6 @@ export default function Footer() {
               </div>
             </div>
           </div>
-        </div>
-        <div className="mt-8 border-t border-gray-200 pt-4 text-center text-xs text-gray-500 dark:border-gray-700 dark:text-gray-400">
-          &copy; 2025 Gyulog. All rights reserved.
         </div>
       </div>
     </footer>

@@ -14,7 +14,7 @@ import Link from "next/link";
 
 const NotFound = () => {
   return (
-    <div className="absolute top-0 left-0 z-10 flex justify-center items-center min-h-screen w-full bg-white dark:bg-[#020817]">
+    <div className="absolute top-0 left-0 flex justify-center items-center min-h-screen w-full bg-white dark:bg-[#020817]">
       <div className="w-full max-w-md mx-auto">
         <Card>
           <CardHeader className="space-y-4">

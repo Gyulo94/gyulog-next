@@ -1,3 +1,5 @@
+import { auth } from "@/auth";
+import LogOutButton from "@/components/admin/logout-button";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -6,12 +8,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { getServerAuthSession } from "@/lib/auth";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
 export default async function AdminPage() {
-  const session = await getServerAuthSession();
+  const session = await auth();
   if (!session || !session.user) redirect("/admin/login");
   console.log("session", session);
   return (
@@ -20,7 +21,7 @@ export default async function AdminPage() {
         <CardHeader className="space-y-4 flex justify-center items-center">
           <div className="flex justify-center items-center h-28 w-28 relative mb-2">
             <img
-              src={session.user.profileImage || ""}
+              src={session.user.image || "/images/noProfileImage.jpg"}
               alt={`user`}
               className="w-full h-full rounded-full object-cover"
             />
@@ -44,9 +45,7 @@ export default async function AdminPage() {
             <Button asChild>
               <Link href={`/admin/profile`}>프로필</Link>
             </Button>
-            <Button asChild>
-              <Link href={`/admin/logout`}>로그아웃</Link>
-            </Button>
+            <LogOutButton />
           </div>
         </CardContent>
       </Card>

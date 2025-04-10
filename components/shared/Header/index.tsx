@@ -3,7 +3,6 @@ import logo from "@/public/images/logo.png";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import AdminButton from "./admin-button";
 import ChatbotButton from "./chatbot-button";
@@ -12,13 +11,13 @@ import { ModeToggle } from "./mode-toggle";
 import { NavMenu } from "./nav-menu";
 
 export default function Header() {
-  const pathname = usePathname();
-  const hideHeaderPaths = [
-    "/admin",
-    "/admin/login",
-    "/admin/logout",
-    "/admin/profile",
-  ];
+  // const pathname = usePathname();
+  // const hideHeaderPaths = [
+  //   "/admin",
+  //   "/admin/login",
+  //   "/admin/logout",
+  //   "/admin/profile",
+  // ];
   const { data: session } = useSession();
   const [isMobile, setIsMobile] = useState(false);
 
@@ -32,9 +31,9 @@ export default function Header() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  if (hideHeaderPaths.includes(pathname)) {
-    return null;
-  }
+  // if (hideHeaderPaths.includes(pathname)) {
+  //   return null;
+  // }
   return (
     <header className="w-full border-b z-9">
       <div className="container mx-auto py-4 px-8 h-20 w-full flex justify-between items-center">
@@ -50,9 +49,7 @@ export default function Header() {
           />
         </Link>
         <div className="flex items-center space-x-4">
-          {session?.user && (
-            <AdminButton profileImage={session.user.profileImage} />
-          )}
+          {session?.user && <AdminButton image={session.user.image || ""} />}
           <ModeToggle />
           <ChatbotButton />
         </div>

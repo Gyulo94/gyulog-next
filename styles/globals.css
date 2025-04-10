@@ -126,16 +126,16 @@
   position: relative;
   letter-spacing: 15px;
   text-transform: uppercase;
-  color: #292929;
+  color: #fff;
+  text-shadow: 0 0 10px #03bcf4, 0 0 20px #03bcf4, 0 0 40px #03bcf4,
+    0 0 80px #03bcf4, 0 0 160px #03bcf4;
   width: 100%;
   text-align: center;
   -webkit-box-reflect: below 1px linear-gradient(transparent, #0003);
   outline: none;
-  animation: animate 5s linear;
-  animation-fill-mode: forwards;
 }
 
-@keyframes animate {
+/* @keyframes animate {
   0%,
   18%,
   20% {
@@ -151,7 +151,7 @@
     text-shadow: 0 0 10px #03bcf4, 0 0 20px #03bcf4, 0 0 40px #03bcf4,
       0 0 80px #03bcf4, 0 0 160px #03bcf4;
   }
-}
+} */
 
 .h2-neon-light {
   position: relative;
