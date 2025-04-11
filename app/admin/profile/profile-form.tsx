@@ -11,50 +11,64 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import SubmitButton from "@/components/ui/submitButton";
-import { updateProfileImage, updateUser } from "@/lib/actions/user.action";
-import { useSession } from "next-auth/react";
+import { uploadImage } from "@/lib/actions/file.action";
+import { updateUser } from "@/lib/actions/user.action";
+import { getSession, useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function ProfileForm() {
   const { data: session, update } = useSession();
-  const [name, setname] = useState<string>(session?.user.name || "");
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const fileRef = useRef<HTMLInputElement>(null);
+  const [name, setName] = useState<string>("");
+  const [image, setImage] = useState<string>("");
   const router = useRouter();
-  const handleImageChange = async () => {
-    const file = fileRef.current?.files?.[0];
+
+  useEffect(() => {
+    const initializeSession = async () => {
+      const session = await getSession();
+      if (session?.user) {
+        setName(session.user.name || "");
+        setImage(session.user.image || "");
+      }
+    };
+    void initializeSession();
+  }, []);
+
+  const handleProfileImageChange = async (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = e.target.files?.[0];
     if (file) {
-      setImagePreview(URL.createObjectURL(file));
       const formData = new FormData();
-      formData.append("profileImage", file);
-      const image = await updateProfileImage(formData);
-      void update({
-        profileImage: image,
-        name: session?.user.name,
-        email: session?.user.email,
-      });
-      router.push("/admin");
-      router.refresh();
+      formData.append("file", file);
+      const data = await uploadImage(formData);
+      setImage(data);
     }
-  };
-  const handleImageClick = () => {
-    fileRef.current?.click();
   };
 
   const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const newName = await updateUser(name);
-    console.log("user", name);
 
-    void update({
-      name: newName,
-      email: session?.user.email,
-      profileImage: session?.user.profileImage,
-    });
-    router.push("/admin");
-    router.refresh();
+    try {
+      console.log("Submitting form with:", { name, image });
+
+      // 이미지 값이 없으면 null로 전달
+      const newUser = await updateUser(name, image || null);
+      const { newName, newImage } = newUser;
+
+      console.log("User updated successfully:", { newName, newImage });
+
+      await update({
+        name: newName,
+        image: newImage,
+      });
+
+      router.push("/admin");
+    } catch (error) {
+      console.error("Error in onSubmitHandler:", error);
+      alert("유저 정보 업데이트에 실패했습니다.");
+    }
   };
   return (
     <Card>
@@ -69,32 +83,52 @@ export default function ProfileForm() {
       <CardContent className="space-y-4">
         <form onSubmit={onSubmitHandler} className="space-y-6">
           <div className="flex justify-center items-center mx-auto h-52 w-52 relative mb-2">
-            <input type="hidden" name="id" id="id" value={session?.user.id} />
-            <input
-              type="file"
-              accept="image/*"
-              id="profileImage"
-              name="profileImage"
-              className="hidden"
-              ref={fileRef}
-              onChange={handleImageChange}
-            />
-            {imagePreview ? (
-              <Image
-                src={imagePreview}
-                fill
-                alt={`user`}
-                className="rounded-full object-cover"
-                onClick={handleImageClick}
-              />
+            {image ? (
+              <>
+                <label
+                  htmlFor={"profile"}
+                  className="w-[200px] h-[200px] rounded-full border flex items-center justify-center cursor-pointer ml-2"
+                >
+                  <Image
+                    src={image}
+                    alt="미리보기"
+                    width={0}
+                    height={0}
+                    sizes="100vw"
+                    className="cursor-pointer w-[200px] h-[200px] object-cover rounded-full"
+                  />
+                </label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  id={"profile"}
+                  className="hidden"
+                  onChange={handleProfileImageChange}
+                />
+              </>
             ) : (
-              <Image
-                src={session?.user.profileImage || ""}
-                fill
-                alt={`user`}
-                className="rounded-full border object-cover"
-                onClick={handleImageClick}
-              />
+              <>
+                <label
+                  htmlFor={"profile"}
+                  className="w-[200px] h-[200px] rounded-full border flex items-center justify-center cursor-pointer ml-2"
+                >
+                  <Image
+                    src={"/images/noProfileImage.jpg"}
+                    alt="미리보기"
+                    width={0}
+                    height={0}
+                    sizes="100vw"
+                    className="cursor-pointer w-[200px] h-[200px] object-cover rounded-full"
+                  />
+                </label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  id={"profile"}
+                  className="hidden"
+                  onChange={handleProfileImageChange}
+                />
+              </>
             )}
           </div>
           <div>
@@ -102,7 +136,7 @@ export default function ProfileForm() {
             <Input
               id="name"
               name="name"
-              onChange={(e) => setname(e.currentTarget.value)}
+              onChange={(e) => setName(e.currentTarget.value)}
               type="text"
               value={name}
             />

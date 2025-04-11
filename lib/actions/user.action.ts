@@ -1,9 +1,11 @@
 "use server";
 
-import { signIn } from "@/auth";
+import { auth, signIn } from "@/auth";
 import { prisma } from "@/db/prisma";
 import { hashSync } from "bcrypt";
+import fs from "fs";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
+import path from "path";
 import { LoginFormSchema, SignUpFormSchema } from "../schema";
 import { FormState } from "../types";
 
@@ -81,26 +83,64 @@ export async function signUpWithCredentials(
   }
 }
 
-// export const updateUser = async (name: string) => {
-//   const session = await auth();
-//   if (!session) {
-//     throw new Error("No session found");
-//   }
-//   const response = await fetch(`${BASE_URL}/user/${session.user.email}`, {
-//     method: "PATCH",
-//     body: JSON.stringify({ name }),
-//     headers: {
-//       "Content-Type": "application/json",
-//       authorization: `Bearer ${session.backendTokens.access_token}`,
-//     },
-//   });
-//   if (!response.ok) {
-//     throw new Error("Failed to update user");
-//   }
-//   const result = await response.json();
-//   return result.name;
-// };
+export const updateUser = async (name: string, image: string | null) => {
+  const session = await auth();
+  const email = session?.user?.email;
 
+  if (!email) {
+    throw new Error("해당 유저는 존재하지 않습니다.");
+  }
+
+  try {
+    let imageUrl = session.user.image;
+
+    if (image && !image.startsWith("/profile/")) {
+      const fileName = path.basename(image);
+      const tempPath = path.join(process.cwd(), "public/temp", fileName);
+      const profilePath = path.join(process.cwd(), "public/profile", fileName);
+
+      // console.log("Temp Path:", tempPath);
+      // console.log("Profile Path:", profilePath);
+
+      if (!fs.existsSync(tempPath)) {
+        // console.error("Temp file does not exist:", tempPath);
+        throw new Error("업로드된 파일을 찾을 수 없습니다.");
+      }
+
+      const profileDir = path.join(process.cwd(), "public/profile");
+      if (!fs.existsSync(profileDir)) {
+        // console.log("Creating profile directory:", profileDir);
+        fs.mkdirSync(profileDir, { recursive: true });
+      }
+
+      if (imageUrl && imageUrl.startsWith("/profile/")) {
+        const oldImagePath = path.join(process.cwd(), "public", imageUrl);
+        if (fs.existsSync(oldImagePath)) {
+          // console.log("Deleting old image:", oldImagePath);
+          fs.unlinkSync(oldImagePath);
+        }
+      }
+
+      fs.renameSync(tempPath, profilePath);
+
+      imageUrl = `/profile/${fileName}`;
+    } else if (image && image.startsWith("/profile/")) {
+      imageUrl = image;
+    }
+
+    const updatedUser = await prisma.user.update({
+      where: { email },
+      data: { name, image: imageUrl },
+    });
+
+    // console.log("User updated successfully:", updatedUser);
+
+    return { newName: name, newImage: imageUrl };
+  } catch (error) {
+    // console.error("Error updating user:", error);
+    throw new Error("유저 정보 업데이트에 실패했습니다.");
+  }
+};
 // export async function updateProfileImage(formData: FormData) {
 //   const session = await getServerAuthSession();
 //   if (!session) {

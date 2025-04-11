@@ -49,13 +49,29 @@ export const config = {
     }),
   ],
   callbacks: {
-    async session({ session, token, trigger, user }: any) {
-      session.user.id = token.sub;
-
-      if (trigger === "update") {
-        session.user.name = user.name;
-        session.user.image = user.image;
+    async jwt({ token, user, trigger, session }: any) {
+      if (user) {
+        token.id = user.id;
+        token.role = user.role;
+        token.email = user.email;
+        token.name = user.name;
+        token.image = user.image;
       }
+
+      if (trigger === "update" && session) {
+        token.name = session.name || token.name;
+        token.image = session.image || token.image;
+      }
+
+      return token;
+    },
+    async session({ session, token }: any) {
+      session.user.id = token.id;
+      session.user.role = token.role;
+      session.user.email = token.email;
+      session.user.name = token.name;
+      session.user.image = token.image;
+
       return session;
     },
   },

@@ -1,24 +1,34 @@
 "use server";
 
-import { getServerAuthSession } from "../auth";
-import { SERVER_URL } from "../constants";
-import { convertToAbsoluteUrl } from "../utils";
+import fs from "fs";
+import path from "path";
+import * as uuid from "uuid";
 
 export async function uploadImage(formData: FormData) {
-  const session = await getServerAuthSession();
-  if (!session) {
-    throw new Error("No session found");
+  const file = formData.get("file") as File | null;
+
+  if (!file) {
+    throw new Error("이미지를 업로드 해주세요.");
   }
-  const response = await fetch(`${SERVER_URL}/file`, {
-    method: "POST",
-    body: formData,
-    headers: {
-      authorization: `Bearer ${session.backendTokens.access_token}`,
-    },
-  });
-  if (!response.ok) {
-    throw new Error("Failed to upload image");
+
+  const uploadsDir = path.join(process.cwd(), "public/temp");
+
+  if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir, { recursive: true });
   }
-  const result = await response.json();
-  return convertToAbsoluteUrl(result.url);
+
+  const fileExtension = path.extname(file.name);
+  const uniqueFileName = `${uuid.v4()}${fileExtension}`;
+  const filePath = path.join(uploadsDir, uniqueFileName);
+
+  const buffer = Buffer.from(await file.arrayBuffer());
+
+  try {
+    fs.writeFileSync(filePath, buffer);
+    const fileUrl = `/temp/${uniqueFileName}`;
+    return fileUrl;
+  } catch (error) {
+    console.error("파일 저장 중 오류 발생:", error);
+    throw new Error("파일 저장 중 오류가 발생했습니다.");
+  }
 }
